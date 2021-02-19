@@ -1,8 +1,8 @@
 <launch>
-    <arg name="use_camera" default="false"/>
+    <arg name="use_camera" default="true"/>
     <arg name="use_arm" default="false"/>
-    <arg name="use_vslam" default="false"/>
-    <arg name="use_base" default="false"/>
+    <arg name="use_vslam" default="true"/>
+    <arg name="use_base" default="true"/>
     <arg name="torque_control" default="false"/>
     <arg name="use_sim" default="false"/>
     <arg name="teleop" default="false"/>
@@ -73,6 +73,15 @@
         <node name="locobot_gazebo" pkg="locobot_gazebo" type="locobot_gazebo" 
             respawn="true" output="screen"/> 
 
+        <group if="$(arg use_vslam)">
+            
+          <include file="$(find orb_slam2_ros)/launch/orb_slam2_realsense.launch">
+              <arg name="launch_realsense" value="false"/>
+          </include>
+            
+        </group>
+
+
     </group>
 
 
@@ -80,9 +89,7 @@
 
     <node name="turtlebot_controller_node" pkg="turtlebot_controller" 
                             type="turtlebot_controller_node"/>
-                            
-    <node name="gpmp_action_server" pkg="locobot_control" 
-                            type="pointrobot3factor_ros_server.py" output="screen"/>
+<!-- 
 
     <node name="pyrobot_kinematics" pkg="pyrobot_bridge"
                   type="kinematics.py"/>
@@ -90,7 +97,7 @@
     <node name="pyrobot_moveit" pkg="pyrobot_bridge"
                   type="moveit_bridge.py"/>
 
-
+ -->
     
     <group if="$(eval arg('use_base') or arg('use_sim'))" >
         <include file="$(find base_navigation)/launch/move_base.launch">
